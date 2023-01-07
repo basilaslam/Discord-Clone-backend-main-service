@@ -1,19 +1,15 @@
 /* eslint-disable prettier/prettier */
-import { IsNotEmpty, IsEmail, IsMobilePhone, MinLength, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsEmail, MinLength, MaxLength } from 'class-validator';
 
-export class CreateUserDto {
+export class CreateUserWithProvidersDto {
   @IsNotEmpty()
   firstName: string;
 
-  @IsNotEmpty()
   lastName: string;
 
   @IsNotEmpty()
   @IsEmail()
-  email?: string;
-
-  @IsNotEmpty()
-  mobile?: number;
+  email: string;
 
   @IsNotEmpty()
   @MinLength(8)
