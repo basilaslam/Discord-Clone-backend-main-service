@@ -14,6 +14,7 @@ import { User } from 'src/user/schemas/user.schema';
 import { LoginUserDto } from 'src/user/dto/loginUser.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
+import { UserToClient } from 'src/user/dto/clientSideUser.dto';
 
 @Controller('user')
 export class UserController {
@@ -44,11 +45,17 @@ export class UserController {
     @Body() loginUserDto: LoginUserDto,
     @Res({ passthrough: true }) response: Response,
   ): Promise<User> {
-    const jwt = await this.jwtService.signAsync({
-      email: loginUserDto.email,
-    });
-    response.cookie('jwt', jwt, { httpOnly: true });
-    return this.userService.loginUser(loginUserDto);
+    const result = await this.userService.loginUser(loginUserDto);
+    if (result) {
+      console.log(result);
+      const jwt = await this.jwtService.signAsync({
+        userName: result.firstName + ' ' + result.lastName,
+        email: result.email,
+      });
+      response.cookie('jwt', jwt, { httpOnly: true });
+    }
+
+    return result;
   }
 
   @Get('/allUsers')

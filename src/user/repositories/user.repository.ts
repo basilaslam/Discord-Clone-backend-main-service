@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { LoginUserDto } from './../dto/loginUser.dto';
 import { CreateUserDto } from 'src/user/dto/createUser.dto';
-import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { User, UserDocument } from '../schemas/user.schema';
@@ -13,6 +13,13 @@ export class UserRepository {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
+    const userExist = await this.userModel.findOne({
+      email: createUserDto.email,
+    });
+    if(userExist){
+      throw new HttpException('You already have an account',HttpStatus.NOT_ACCEPTABLE)
+      // throw new BadRequestException('You already have an account')
+    }
     const newUser = await new this.userModel(createUserDto);
     return newUser.save();
   }
@@ -20,8 +27,13 @@ export class UserRepository {
   async registerWithProviders(
     createUserWithProvidersDto: CreateUserWithProvidersDto,
   ): Promise<User> {
-    const newUser = await this.userModel.create(createUserWithProvidersDto);
-    return newUser.save();
+    const userExist = await this.userModel.findOne({email:createUserWithProvidersDto.email})
+    if(!userExist){
+      const newUser = await this.userModel.create(createUserWithProvidersDto);
+      return newUser.save();
+    }else{
+      return null
+    }
   }
 
   async loginUser(loginUserDto: LoginUserDto) {
