@@ -27,27 +27,48 @@ export class UserController {
   @UsePipes(ValidationPipe)
   async createUser(
     @Body() createUserDto: CreateUserDto,
+    @Res({ passthrough: true }) response: Response,
   ): Promise<CreateUserDto> {
-    return this.userService.createUser(createUserDto);
+    const result = await this.userService.createUser(createUserDto);
+    if (result) {
+      const jwt = await this.jwtService.signAsync({
+        userName: result.firstName + ' ' + result.lastName,
+        email: result.email,
+      });
+      response.cookie('jwt', jwt, { httpOnly: true });
+    }
+
+    return result;
   }
 
   @Post('/registerWithProviders')
-  @UsePipes(ValidationPipe)
+  // @UsePipes(ValidationPipe)
   async registerWithProviders(
     @Body() createUserWithProvidersDto: CreateUserWithProvidersDto,
+    @Res({ passthrough: true }) response: Response,
   ): Promise<User> {
-    return this.userService.registerWithProviders(createUserWithProvidersDto);
+    const result = await this.userService.registerWithProviders(
+      createUserWithProvidersDto,
+    );
+    if (result) {
+      const jwt = await this.jwtService.signAsync({
+        userName: result.firstName + ' ' + result.lastName,
+        email: result.email,
+      });
+      response.cookie('jwt', jwt, { httpOnly: true });
+    }
+
+    return result;
   }
 
   @Post('/login')
-  @UsePipes(ValidationPipe)
+  // @UsePipes(ValidationPipe)
   async login(
     @Body() loginUserDto: LoginUserDto,
     @Res({ passthrough: true }) response: Response,
   ): Promise<User> {
     const result = await this.userService.loginUser(loginUserDto);
     if (result) {
-      console.log(result);
       const jwt = await this.jwtService.signAsync({
         userName: result.firstName + ' ' + result.lastName,
         email: result.email,
