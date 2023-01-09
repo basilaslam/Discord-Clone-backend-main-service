@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { CreateUserWithProvidersDto } from './../../dto/createUserWithProviders.dto';
 import { CreateUserDto } from 'src/user/dto/createUser.dto';
 import { UserService } from './../../services/user/user.service';
