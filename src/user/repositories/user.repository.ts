@@ -8,10 +8,9 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { User, UserDocument } from '../schemas/user.schema';
 import { CreateUserWithProvidersDto } from '../dto/createUserWithProviders.dto';
-import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
 
 @Injectable()
@@ -69,7 +68,7 @@ export class UserRepository {
         );
       }
     } else {
-      return null;
+      return userExist;
     }
   }
 

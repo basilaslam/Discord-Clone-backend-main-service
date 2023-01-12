@@ -15,7 +15,6 @@ import { User } from 'src/user/schemas/user.schema';
 import { LoginUserDto } from 'src/user/dto/loginUser.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
-import { UserToClient } from 'src/user/dto/clientSideUser.dto';
 
 @Controller('user')
 export class UserController {

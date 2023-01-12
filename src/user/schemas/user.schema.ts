@@ -4,30 +4,32 @@ import { HydratedDocument } from 'mongoose';
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema()
+@Schema({
+  timestamps: true,
+})
 export class User {
-  @Prop({required: true})
+  @Prop({ required: true })
   firstName: string;
 
-  @Prop({default:""})
+  @Prop({ default: '' })
   lastName: string;
 
-  @Prop({required: true})
+  @Prop({ required: true })
   email: string;
 
   @Prop()
   mobile: number;
 
-  @Prop({default:""})
+  @Prop({ default: '' })
   image: string;
 
-  @Prop({required: true})
+  @Prop({ required: true })
   password: string;
 
-  @Prop({required: true})
+  @Prop({ required: true })
   confirmPassword: string;
 
-  @Prop({required: true})
+  @Prop({ required: true })
   signInWith: string;
 }
 
