@@ -1,6 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
+import { Document, Types, Schema as MongooseSchema } from 'mongoose';
+
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -31,6 +33,9 @@ export class User {
 
   @Prop({ required: true })
   signInWith: string;
+
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'UserPosts' })
+  likedPosts: Array<string>;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

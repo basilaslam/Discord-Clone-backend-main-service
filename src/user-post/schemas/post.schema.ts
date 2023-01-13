@@ -9,7 +9,7 @@ export type UserPostDocument = HydratedDocument<UserPosts>;
   timestamps: true,
 })
 export class UserPosts extends Document {
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User' })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true })
   user: Types.ObjectId;
 
   @Prop({ required: true })
@@ -18,7 +18,7 @@ export class UserPosts extends Document {
   @Prop({ default: '' })
   description: string;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User' })
+  @Prop({ ref: 'User' })
   likes: Array<string>;
 }
 
