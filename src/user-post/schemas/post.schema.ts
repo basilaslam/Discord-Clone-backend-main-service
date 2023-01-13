@@ -17,6 +17,9 @@ export class UserPosts extends Document {
 
   @Prop({ default: '' })
   description: string;
+
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User' })
+  likes: Array<string>;
 }
 
 export const userPostSchema = SchemaFactory.createForClass(UserPosts);

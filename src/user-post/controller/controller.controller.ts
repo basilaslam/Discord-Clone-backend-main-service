@@ -10,6 +10,8 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { Query } from '@nestjs/common/decorators';
+import { PostIdDto } from '../dto/postId.dto';
 
 @Controller('userPost')
 export class ControllerController {
@@ -29,5 +31,10 @@ export class ControllerController {
   @Get('/getPosts')
   async getAllPosts(): Promise<UserPosts[]> {
     return this.userPostService.getAllPosts();
+  }
+
+  @Get('/like')
+  async likeAPost(@Query() postIdDto: PostIdDto): Promise<boolean> {
+    return this.userPostService.likePost(postIdDto);
   }
 }

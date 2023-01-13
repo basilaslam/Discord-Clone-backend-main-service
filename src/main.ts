@@ -13,7 +13,7 @@ async function bootstrap() {
   });
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true,
+      whitelist: false,
     }),
   );
   await app.listen(4000);

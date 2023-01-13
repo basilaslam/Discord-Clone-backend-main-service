@@ -1,3 +1,4 @@
+import { PostIdDto } from './../dto/postId.dto';
 import { UserPosts } from './../schemas/post.schema';
 import { UserPostAddDto } from './../dto/userPost.dto';
 import { Injectable } from '@nestjs/common';
@@ -13,5 +14,9 @@ export class UserPostService {
 
   async getAllPosts(): Promise<UserPosts[]> {
     return this.userPostRepository.getAllPosts();
+  }
+
+  async likePost(postIdDto: PostIdDto): Promise<boolean> {
+    return this.userPostRepository.likePost(postIdDto);
   }
 }
