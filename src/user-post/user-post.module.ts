@@ -1,4 +1,3 @@
-import { UserRepository } from './../user/repositories/user.repository';
 import { UserPosts, userPostSchema } from './schemas/post.schema';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -7,6 +6,10 @@ import { UserPostService } from './service/service.service';
 import { JwtModule } from '@nestjs/jwt';
 import { UserPostRepository } from './respositories/post.repository';
 import { User, UserSchema } from 'src/user/schemas/user.schema';
+import {
+  UserPostsComments,
+  UserPostsCommentsSchema,
+} from './schemas/commet.schema';
 
 @Module({
   imports: [
@@ -14,6 +17,9 @@ import { User, UserSchema } from 'src/user/schemas/user.schema';
       { name: UserPosts.name, schema: userPostSchema },
     ]),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: UserPostsComments.name, schema: UserPostsCommentsSchema },
+    ]),
     JwtModule.register({
       secret: 'secret',
       signOptions: {

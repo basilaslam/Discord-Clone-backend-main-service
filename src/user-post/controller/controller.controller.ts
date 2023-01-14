@@ -1,3 +1,4 @@
+import { UserPostsComments } from './../schemas/commet.schema';
 import { UserPostService } from './../service/service.service';
 import { UserPostAddDto } from './../dto/userPost.dto';
 import { UserPosts } from './../schemas/post.schema';
@@ -12,6 +13,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Query } from '@nestjs/common/decorators';
 import { PostIdDto } from '../dto/postId.dto';
+import { PostCommentDto } from '../dto/postComment.dto';
 
 @Controller('userPost')
 export class ControllerController {
@@ -37,5 +39,19 @@ export class ControllerController {
   @Get('/like')
   async likeAPost(@Query() postIdDto: PostIdDto): Promise<boolean> {
     return this.userPostService.likePost(postIdDto);
+  }
+
+  @Post('/comment')
+  async commentAPost(
+    @Body() postCommentDto: PostCommentDto,
+  ): Promise<UserPostsComments> {
+    return this.userPostService.commentPost(postCommentDto);
+  }
+
+  @Get('/getComments')
+  async getComments(
+    @Query() object: { postId: string },
+  ): Promise<UserPostsComments[]> {
+    return this.userPostService.getComments(object.postId);
   }
 }
