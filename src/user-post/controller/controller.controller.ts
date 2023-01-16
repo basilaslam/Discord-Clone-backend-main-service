@@ -54,4 +54,11 @@ export class ControllerController {
   ): Promise<UserPostsComments[]> {
     return this.userPostService.getComments(object.postId);
   }
+
+  @Get('/likeAComment')
+  async likeAComment(
+    @Query() object: { commentId: string; userId: string },
+  ): Promise<boolean> {
+    return this.userPostService.likeAComment(object.commentId, object.userId);
+  }
 }

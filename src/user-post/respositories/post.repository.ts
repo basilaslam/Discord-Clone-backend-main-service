@@ -8,7 +8,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { UserPosts } from '../schemas/post.schema';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/user/schemas/user.schema';
-import { UserPostCommentDocument, UserPostsComments } from '../schemas/commet.schema';
+import {
+  UserPostCommentDocument,
+  UserPostsComments,
+} from '../schemas/commet.schema';
 
 @Injectable()
 export class UserPostRepository {
@@ -27,7 +30,10 @@ export class UserPostRepository {
 
   // Fetch all Posts
   async getAllPosts(): Promise<UserPosts[]> {
-    const posts = await this.userPostModel.find({}).populate('user');
+    const posts = await this.userPostModel
+      .find({})
+      .populate('user')
+      .sort({ createdAt: -1 });
     return posts;
   }
 
@@ -72,7 +78,30 @@ export class UserPostRepository {
 
   // Get comments of posts
   async getComments(postId: string): Promise<UserPostsComments[]> {
-    const comments = await this.userPostCommentsModel.find({postId:postId}).populate('userId');
-    return comments
+    const comments = await this.userPostCommentsModel
+      .find({ postId: postId })
+      .populate('userId')
+      .sort({ createdAt: -1 });
+    return comments;
+  }
+
+  // Like a Comment
+  async likeAComment(commentId: string, userId: string): Promise<boolean> {
+    const likeExist =await this.userPostCommentsModel.findOne({
+      _id: commentId,
+      likes: { $in: [userId] },
+    });
+    if(likeExist){
+      await this.userPostCommentsModel.updateOne(
+        { _id: commentId },
+        { $pull: { likes: userId } },
+      );
+      return false
+    }
+    await this.userPostCommentsModel.updateOne(
+      { _id: commentId },
+      { $push: { likes: userId } },
+    );
+    return true
   }
 }

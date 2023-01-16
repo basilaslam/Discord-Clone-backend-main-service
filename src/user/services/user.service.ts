@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { CreateUserWithProvidersDto } from './../../dto/createUserWithProviders.dto';
+import { CreateUserWithProvidersDto } from '../dto/createUserWithProviders.dto';
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from 'src/user/dto/createUser.dto';
 import { UserRepository } from 'src/user/repositories/user.repository';
@@ -28,6 +28,10 @@ export class UserService {
 
   async loginUser(loginUserDto: LoginUserDto): Promise<User> {
     return this.userRepository.loginUser(loginUserDto);
+  }
+
+  async getCurrentUserProfile(userId:string): Promise<User> {
+    return this.userRepository.getCurrentUserProfile(userId);
   }
 
   //   async getUserById(userId: string): Promise<User> {

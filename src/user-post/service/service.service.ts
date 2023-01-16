@@ -31,4 +31,8 @@ export class UserPostService {
   async getComments(postId: string): Promise<UserPostsComments[]> {
     return this.userPostRepository.getComments(postId);
   }
+
+  async likeAComment(commentId: string, userId: string): Promise<boolean> {
+    return this.userPostRepository.likeAComment(commentId, userId);
+  }
 }

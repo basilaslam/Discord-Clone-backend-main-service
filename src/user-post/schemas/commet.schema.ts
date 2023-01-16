@@ -15,15 +15,15 @@ export class UserPostsComments extends Document {
     required: true,
   })
   postId: Types.ObjectId;
-  
+
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true })
   userId: Types.ObjectId;
 
   @Prop()
   comment: string;
 
-  @Prop()
-  likes: string;
+  @Prop({ ref: 'User' })
+  likes: Array<string>;
 
   @Prop()
   replies: Array<object>;

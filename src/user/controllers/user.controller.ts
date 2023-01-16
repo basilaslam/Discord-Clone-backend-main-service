@@ -1,12 +1,15 @@
 /* eslint-disable prettier/prettier */
-import { CreateUserWithProvidersDto } from './../../dto/createUserWithProviders.dto';
+import { CreateUserWithProvidersDto } from '../dto/createUserWithProviders.dto';
 import { CreateUserDto } from 'src/user/dto/createUser.dto';
-import { UserService } from './../../services/user/user.service';
+import { UserService } from '../services/user.service';
 import {
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Post,
+  Query,
   Res,
   UsePipes,
   ValidationPipe,
@@ -77,6 +80,15 @@ export class UserController {
     }
 
     return result;
+  }
+
+  @Get('/profile')
+  async getCurrentUserProfile(
+    @Query() object: { userId: string },
+  ): Promise<User> {
+    if(!object.userId) return 
+    const profile = await this.userService.getCurrentUserProfile(object.userId);
+    return profile
   }
 
   @Get('/allUsers')

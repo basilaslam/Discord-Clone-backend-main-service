@@ -79,17 +79,22 @@ export class UserRepository {
         user.password,
         loginUserDto.password,
       );
-      if(!passwordCheck) throw new HttpException("Invalid Credentials" , HttpStatus.BAD_REQUEST)
-      else return user
+      if (!passwordCheck)
+        throw new HttpException('Invalid Credentials', HttpStatus.BAD_REQUEST);
+      else return user;
     }
 
-   if (!user) {
+    if (!user) {
       throw new BadRequestException('User Not Found');
     }
   }
 
   async find(): Promise<User[]> {
     return this.userModel.find({});
+  }
+
+  async getCurrentUserProfile(userId: string): Promise<User> {
+    return this.userModel.findOne({_id:userId});
   }
 
   //   async findOne(userFilterQuery: FilterQuery<User>): Promise<User> {
