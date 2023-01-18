@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { Date, HydratedDocument } from 'mongoose';
 import { Document, Types, Schema as MongooseSchema } from 'mongoose';
 
 
@@ -36,6 +36,30 @@ export class User {
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'UserPosts' })
   likedPosts: Array<string>;
+
+  @Prop()
+  DOB: string;
+
+  @Prop()
+  gender: string;
+
+  @Prop()
+  address: string;
+
+  @Prop()
+  city: string;
+
+  @Prop()
+  country: string;
+
+  @Prop()
+  postalCode: string;
+
+  @Prop()
+  qualifications: Array<string>;
+
+  @Prop()
+  skills: Array<string>;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -33,6 +33,10 @@ export class UserService {
   async getCurrentUserProfile(userId:string): Promise<User> {
     return this.userRepository.getCurrentUserProfile(userId);
   }
+  
+  async updateProfile(userDetails:any): Promise<User> {
+    return this.userRepository.updateProfile(userDetails)
+  }
 
   //   async getUserById(userId: string): Promise<User> {
   //     return this.userRepository.findOne({ userId });

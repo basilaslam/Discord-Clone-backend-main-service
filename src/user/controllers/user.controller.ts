@@ -18,6 +18,7 @@ import { User } from 'src/user/schemas/user.schema';
 import { LoginUserDto } from 'src/user/dto/loginUser.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
+import { UpdateUserDto } from '../dto/updateUser.dto';
 
 @Controller('user')
 export class UserController {
@@ -78,7 +79,6 @@ export class UserController {
       });
       response.cookie('jwt', jwt, { httpOnly: true });
     }
-
     return result;
   }
 
@@ -86,9 +86,15 @@ export class UserController {
   async getCurrentUserProfile(
     @Query() object: { userId: string },
   ): Promise<User> {
-    if(!object.userId) return 
+    if(object.userId=='null') return 
     const profile = await this.userService.getCurrentUserProfile(object.userId);
     return profile
+  }
+
+  @Post('/updateProfile')
+  async updateProfile(@Body() updateUserDto:UpdateUserDto): Promise<User> {
+    if (!updateUserDto.userId) return; 
+    return this.userService.updateProfile(updateUserDto);
   }
 
   @Get('/allUsers')
