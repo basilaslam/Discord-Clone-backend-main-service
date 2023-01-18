@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Date, HydratedDocument } from 'mongoose';
-import { Document, Types, Schema as MongooseSchema } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
+import {Schema as MongooseSchema } from 'mongoose';
 
 
 export type UserDocument = HydratedDocument<User>;

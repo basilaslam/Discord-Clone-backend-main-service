@@ -33,6 +33,12 @@ export class UserController {
     @Body() createUserDto: CreateUserDto,
     @Res({ passthrough: true }) response: Response,
   ): Promise<CreateUserDto> {
+    if (createUserDto.password != createUserDto.confirmPassword)
+      throw new HttpException(
+        'password must be equal to confirm password',
+        HttpStatus.BAD_REQUEST,
+      );
+
     const result = await this.userService.createUser(createUserDto);
     if (result) {
       const jwt = await this.jwtService.signAsync({
