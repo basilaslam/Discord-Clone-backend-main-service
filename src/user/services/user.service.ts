@@ -10,24 +10,10 @@ import { LoginUserDto } from 'src/user/dto/loginUser.dto';
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<User> {
-    return this.userRepository.create(createUserDto);
-  }
+ 
 
   async getAllUsers(): Promise<User[]> {
     return this.userRepository.find();
-  }
-
-  async registerWithProviders(
-    createUserWithProvidersDto: CreateUserWithProvidersDto,
-  ): Promise<User> {
-    return this.userRepository.registerWithProviders(
-      createUserWithProvidersDto,
-    );
-  }
-
-  async loginUser(loginUserDto: LoginUserDto): Promise<User> {
-    return this.userRepository.loginUser(loginUserDto);
   }
 
   async getCurrentUserProfile(userId:string): Promise<User> {

@@ -23,4 +23,6 @@ export class CreateUserWithProvidersDto {
 
   @IsNotEmpty()
   signInWith: string;
+
+  accessToken: object;
 }

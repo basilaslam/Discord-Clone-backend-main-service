@@ -1,24 +1,12 @@
-/* eslint-disable prettier/prettier */
-import { CreateUserWithProvidersDto } from '../dto/createUserWithProviders.dto';
-import { CreateUserDto } from 'src/user/dto/createUser.dto';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { UserService } from '../services/user.service';
-import {
-  Body,
-  Controller,
-  Get,
-  HttpException,
-  HttpStatus,
-  Post,
-  Query,
-  Res,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req } from '@nestjs/common';
 import { User } from 'src/user/schemas/user.schema';
-import { LoginUserDto } from 'src/user/dto/loginUser.dto';
 import { JwtService } from '@nestjs/jwt';
-import { Response } from 'express';
+import { Request } from 'express';
 import { UpdateUserDto } from '../dto/updateUser.dto';
+import { UseGuards } from '@nestjs/common/decorators/core/use-guards.decorator';
+import { AuthGuard } from '@nestjs/passport/dist';
 
 @Controller('user')
 export class UserController {
@@ -27,79 +15,20 @@ export class UserController {
     private jwtService: JwtService,
   ) {}
 
-  @Post('/signup')
-  @UsePipes(ValidationPipe)
-  async createUser(
-    @Body() createUserDto: CreateUserDto,
-    @Res({ passthrough: true }) response: Response,
-  ): Promise<CreateUserDto> {
-    if (createUserDto.password != createUserDto.confirmPassword)
-      throw new HttpException(
-        'password must be equal to confirm password',
-        HttpStatus.BAD_REQUEST,
-      );
-
-    const result = await this.userService.createUser(createUserDto);
-    if (result) {
-      const jwt = await this.jwtService.signAsync({
-        userName: result.firstName + ' ' + result.lastName,
-        email: result.email,
-      });
-      response.cookie('jwt', jwt, { httpOnly: true });
-    }
-
-    return result;
-  }
-
-  @Post('/registerWithProviders')
-  // @UsePipes(ValidationPipe)
-  async registerWithProviders(
-    @Body() createUserWithProvidersDto: CreateUserWithProvidersDto,
-    @Res({ passthrough: true }) response: Response,
-  ): Promise<User> {
-    const result = await this.userService.registerWithProviders(
-      createUserWithProvidersDto,
-    );
-    if (result) {
-      const jwt = await this.jwtService.signAsync({
-        userName: result.firstName + ' ' + result.lastName,
-        email: result.email,
-      });
-      response.cookie('jwt', jwt, { httpOnly: true });
-    }
-
-    return result;
-  }
-
-  @Post('/login')
-  // @UsePipes(ValidationPipe)
-  async login(
-    @Body() loginUserDto: LoginUserDto,
-    @Res({ passthrough: true }) response: Response,
-  ): Promise<User> {
-    const result = await this.userService.loginUser(loginUserDto);
-    if (result) {
-      const jwt = await this.jwtService.signAsync({
-        userName: result.firstName + ' ' + result.lastName,
-        email: result.email,
-      });
-      response.cookie('jwt', jwt, { httpOnly: true });
-    }
-    return result;
-  }
-
+  @UseGuards(AuthGuard('jwt'))
   @Get('/profile')
   async getCurrentUserProfile(
     @Query() object: { userId: string },
+    @Req() req: Request,
   ): Promise<User> {
-    if(object.userId=='null') return 
-    const profile = await this.userService.getCurrentUserProfile(object.userId);
-    return profile
+    if (object.userId == 'null')
+      throw new HttpException('poyi id yum kond vada', HttpStatus.ACCEPTED);
+    return this.userService.getCurrentUserProfile(object.userId);
   }
 
   @Post('/updateProfile')
-  async updateProfile(@Body() updateUserDto:UpdateUserDto): Promise<User> {
-    if (!updateUserDto.userId) return; 
+  async updateProfile(@Body() updateUserDto: UpdateUserDto): Promise<User> {
+    if (!updateUserDto.userId) return null;
     return this.userService.updateProfile(updateUserDto);
   }
 

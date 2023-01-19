@@ -29,4 +29,6 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   signInWith: string;
+
+  accessToken:object;
 }
