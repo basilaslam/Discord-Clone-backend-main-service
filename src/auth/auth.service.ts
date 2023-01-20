@@ -1,10 +1,8 @@
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Injectable } from '@nestjs/common';
-import { AuthDto } from './dto/signup.dto';
 import { CreateUserDto } from 'src/user/dto/createUser.dto';
 import { AuthRepository } from './auth.repository';
-import { User } from 'src/user/schemas/user.schema';
 import { CreateUserWithProvidersDto } from 'src/user/dto/createUserWithProviders.dto';
 import { LoginUserDto } from 'src/user/dto/loginUser.dto';
 
@@ -22,9 +20,9 @@ export class AuthService {
       email,
       password,
     };
-    const secret = this.config.get('url');
+    const secret = this.config.get('secret');
     const token = await this.jwt.signAsync(payLoad, {
-      expiresIn: '15m',
+      expiresIn: '1h',
       secret: secret,
     });
     return {
@@ -61,6 +59,17 @@ export class AuthService {
 
   async loginUser(loginUserDto: LoginUserDto): Promise<any> {
     const result = await this.authRepository.loginUser(loginUserDto);
+    if (result) {
+      const accessToken = await this.createToken(result.email, result.password);
+      return {
+        result,
+        accessToken,
+      };
+    }
+  }
+
+  async loginCompany(loginUserDto: LoginUserDto): Promise<any> {
+    const result = await this.authRepository.loginCompany(loginUserDto);
     if (result) {
       const accessToken = await this.createToken(result.email, result.password);
       return {

@@ -1,4 +1,3 @@
-import { AuthGuard } from '@nestjs/passport/dist';
 import {
   Body,
   Controller,
@@ -6,7 +5,6 @@ import {
   HttpStatus,
   Post,
   Res,
-  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from 'src/user/dto/createUser.dto';
 import { AuthService } from './auth.service';
@@ -43,11 +41,16 @@ export class AuthController {
   }
 
   @Post('/user/login')
-  async login(
-    @Body() loginUserDto: LoginUserDto,
-    @Res({ passthrough: true }) response: Response,
-  ): Promise<LoginUserDto> {
+  async login(@Body() loginUserDto: LoginUserDto): Promise<LoginUserDto> {
     const result = await this.authService.loginUser(loginUserDto);
+    return result;
+  }
+
+  @Post('/company/login')
+  async companyLogin(
+    @Body() loginUserDto: LoginUserDto,
+  ): Promise<LoginUserDto> {
+    const result = await this.authService.loginCompany(loginUserDto);
     return result;
   }
 }

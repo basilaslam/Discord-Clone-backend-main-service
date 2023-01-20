@@ -1,10 +1,12 @@
 import {
   Body,
   Controller,
+  Get,
   HttpException,
   HttpStatus,
   Post,
 } from '@nestjs/common';
+import { CompanyAdmin } from 'src/company-admin/schema/company-admin.schema';
 import { CompanyCreateDto } from '../dto/companyCreate.dto';
 import { Company } from '../schema/company.schema';
 import { CompanyService } from '../service/company.service';
@@ -27,5 +29,10 @@ export class CompanyController {
     } else {
       return this.companyService.createABusinessPage(companyCreateDto);
     }
+  }
+
+  @Get('/getAllCompanyAdmins')
+  async getAllCompanyAdmins(): Promise<CompanyAdmin[]> {
+    return this.companyService.getAllCompanyAdmins();
   }
 }

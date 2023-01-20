@@ -36,4 +36,9 @@ export class UserController {
   async getAllUsers(): Promise<User[]> {
     return this.userService.getAllUsers();
   }
+
+  @Get('/findByEmail')
+  async getUserByEmail(@Query() email: { email: string }) {
+    return this.userService.getUserByEmail(email.email);
+  }
 }

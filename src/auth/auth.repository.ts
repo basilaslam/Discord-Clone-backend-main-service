@@ -13,10 +13,14 @@ import * as argon2 from 'argon2';
 import { User, UserDocument } from 'src/user/schemas/user.schema';
 import { LoginUserDto } from 'src/user/dto/loginUser.dto';
 import { CreateUserWithProvidersDto } from 'src/user/dto/createUserWithProviders.dto';
+import { Company, CompanyDocument } from 'src/company/schema/company.schema';
 
 @Injectable()
 export class AuthRepository {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(Company.name) private companyModel: Model<CompanyDocument>,
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<CreateUserDto> {
     const userExist = await this.userModel.findOne({
@@ -86,6 +90,23 @@ export class AuthRepository {
 
     if (!user) {
       throw new BadRequestException('User Not Found');
+    }
+  }
+
+  async loginCompany(loginUserDto: LoginUserDto) {
+    const user = await this.companyModel.findOne({ email: loginUserDto.email });
+    if (user) {
+      const passwordCheck = await argon2.verify(
+        user.password,
+        loginUserDto.password,
+      );
+      if (!passwordCheck)
+        throw new HttpException('Invalid Credentials', HttpStatus.BAD_REQUEST);
+      else return user;
+    }
+
+    if (!user) {
+      throw new BadRequestException('You did not have a page');
     }
   }
 }

@@ -10,21 +10,19 @@ import { LoginUserDto } from 'src/user/dto/loginUser.dto';
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
- 
-
   async getAllUsers(): Promise<User[]> {
     return this.userRepository.find();
   }
 
-  async getCurrentUserProfile(userId:string): Promise<User> {
+  async getCurrentUserProfile(userId: string): Promise<User> {
     return this.userRepository.getCurrentUserProfile(userId);
   }
-  
-  async updateProfile(userDetails:any): Promise<User> {
-    return this.userRepository.updateProfile(userDetails)
+
+  async updateProfile(userDetails: any): Promise<User> {
+    return this.userRepository.updateProfile(userDetails);
   }
 
-  //   async getUserById(userId: string): Promise<User> {
-  //     return this.userRepository.findOne({ userId });
-  //   }
+  async getUserByEmail(email: string) {
+    return this.userRepository.getUserByEmail(email);
+  }
 }

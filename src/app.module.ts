@@ -6,6 +6,8 @@ import { UserModule } from './user/user.module';
 import { UserPostModule } from './user-post/user-post.module';
 import { CompanyModule } from './company/company.module';
 import { AuthModule } from './auth/auth.module';
+import { AdminModule } from './admin/admin.module';
+import { CompanyAdminModule } from './company-admin/company-admin.module';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { AuthModule } from './auth/auth.module';
     UserModule,
     UserPostModule,
     CompanyModule,
+    AdminModule,
+    CompanyAdminModule,
   ],
   controllers: [],
   providers: [],
