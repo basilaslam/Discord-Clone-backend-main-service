@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Post,
 } from '@nestjs/common';
+import { CompanyAdminDto } from 'src/company-admin/dto/companyAdmin.dto';
 import { CompanyAdmin } from 'src/company-admin/schema/company-admin.schema';
 import { CompanyCreateDto } from '../dto/companyCreate.dto';
 import { Company } from '../schema/company.schema';
@@ -20,7 +21,6 @@ export class CompanyController {
     @Body()
     companyCreateDto: CompanyCreateDto,
   ): Promise<Company> {
-    console.log(companyCreateDto);
     if (companyCreateDto.password != companyCreateDto.confirmPassword) {
       throw new HttpException(
         'password must be equal to confirm password',
@@ -29,6 +29,14 @@ export class CompanyController {
     } else {
       return this.companyService.createABusinessPage(companyCreateDto);
     }
+  }
+
+  @Post('/addAdmin')
+  async addAdmin(
+    @Body()
+    companyAdminDto: CompanyAdminDto,
+  ): Promise<CompanyAdmin> {
+    return this.companyService.addAdmin(companyAdminDto);
   }
 
   @Get('/getAllCompanyAdmins')

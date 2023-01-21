@@ -21,6 +21,23 @@ export class CompanyAdmin {
   @Prop({ required: true })
   mobile: number;
 
+  @Prop({ required: true })
+  employeeId: string;
+
+  @Prop({})
+  businessMobile: number;
+
+  @Prop({})
+  address: string;
+
+  @Prop({})
+  postalCode:number;
+
+  @Prop({required: true})
+  authority: string;
+
+  @Prop({required:true})
+  status: true;
 }
 
 export const CompanyAdminSchema = SchemaFactory.createForClass(CompanyAdmin);
