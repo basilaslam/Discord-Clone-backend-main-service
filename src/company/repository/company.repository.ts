@@ -1,5 +1,6 @@
+import { BadRequestException, HttpException } from '@nestjs/common';
 /* eslint-disable prettier/prettier */
-import { CompanyDocument } from './../schema/company.schema';
+import { CompanyDocument } from '../schema/company.schema';
 import { Company } from '../schema/company.schema';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -31,6 +32,12 @@ export class CompanyRepository {
   }
 
   async addAdmin(companyAdminDto: CompanyAdminDto): Promise<CompanyAdmin> {
+    const adminExist = await this.companyAdminModel.findOne({
+      email: companyAdminDto.email,
+    });
+    if(adminExist){
+      throw new BadRequestException("An Admin already exists with this email")
+    }
     companyAdminDto.status = true;
     return new this.companyAdminModel(companyAdminDto).save();
   }

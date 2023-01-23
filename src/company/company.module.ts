@@ -1,4 +1,4 @@
-import { CompanyRepository } from './repository/company.respository';
+import { CompanyRepository } from './repository/company.repository';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CompanyController } from './controller/company.controller';

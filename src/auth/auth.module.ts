@@ -7,6 +7,7 @@ import { AuthRepository } from './auth.repository';
 import { User, UserSchema } from 'src/user/schemas/user.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Company, CompanySchema } from 'src/company/schema/company.schema';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [

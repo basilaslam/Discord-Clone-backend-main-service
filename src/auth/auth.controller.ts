@@ -4,13 +4,13 @@ import {
   HttpException,
   HttpStatus,
   Post,
-  Res,
 } from '@nestjs/common';
 import { CreateUserDto } from 'src/user/dto/createUser.dto';
 import { AuthService } from './auth.service';
-import { Response } from 'express';
 import { CreateUserWithProvidersDto } from 'src/user/dto/createUserWithProviders.dto';
 import { LoginUserDto } from 'src/user/dto/loginUser.dto';
+import * as nodemailer from 'nodemailer';
+import { EmailDto } from './dto/email.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -52,5 +52,36 @@ export class AuthController {
   ): Promise<LoginUserDto> {
     const result = await this.authService.loginCompany(loginUserDto);
     return result;
+  }
+
+  async sendEmail(email: string, subject: string, text: string) {
+    try {
+      const transporter = nodemailer.createTransport({
+        host: process.env.HOST,
+        service: process.env.SERVICE,
+        port: 587,
+        secure: true,
+        auth: {
+          user: process.env.USER,
+          pass: process.env.PASS,
+        },
+      });
+
+      await transporter.sendMail({
+        from: process.env.USER,
+        to: email,
+        subject,
+        text,
+      });
+      console.log('email sent successful');
+    } catch (error) {
+      console.log('email not sent');
+      console.log(error);
+    }
+  }
+
+  @Post('/email')
+  async emailSend(@Body() emailDto: EmailDto) {
+    return this.sendEmail(emailDto.email, emailDto.subject, emailDto.message);
   }
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CompanyAdminDto } from 'src/company-admin/dto/companyAdmin.dto';
 import { CompanyAdmin } from 'src/company-admin/schema/company-admin.schema';
 import { CompanyCreateDto } from '../dto/companyCreate.dto';
-import { CompanyRepository } from '../repository/company.respository';
+import { CompanyRepository } from '../repository/company.repository';
 import { Company } from '../schema/company.schema';
 
 @Injectable()

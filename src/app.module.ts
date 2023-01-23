@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -12,7 +11,7 @@ import { CompanyAdminModule } from './company-admin/company-admin.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal:true
+      isGlobal: true,
     }),
     MongooseModule.forRoot(process.env.MONGO_LOCAL_CONNECTION_URL),
     AuthModule,
@@ -23,6 +22,5 @@ import { CompanyAdminModule } from './company-admin/company-admin.module';
     CompanyAdminModule,
   ],
   controllers: [],
-  providers: [],
 })
 export class AppModule {}
