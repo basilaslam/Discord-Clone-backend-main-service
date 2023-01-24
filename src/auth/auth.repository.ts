@@ -15,12 +15,18 @@ import { LoginUserDto } from 'src/user/dto/loginUser.dto';
 import { CreateUserWithProvidersDto } from 'src/user/dto/createUserWithProviders.dto';
 import { Company, CompanyDocument } from 'src/company/schema/company.schema';
 import { CompanyCreateDto } from 'src/company/dto/companyCreate.dto';
+import {
+  CompanyAdmin,
+  CompanyAdminDocument,
+} from 'src/company-admin/schema/company-admin.schema';
 
 @Injectable()
 export class AuthRepository {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(Company.name) private companyModel: Model<CompanyDocument>,
+    @InjectModel(CompanyAdmin.name)
+    private companyAdminModel: Model<CompanyAdminDocument>,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<CreateUserDto> {
@@ -83,7 +89,11 @@ export class AuthRepository {
     const companyExist = await this.companyModel.findOne({
       email: companyCreateDto.email,
     });
-    if(companyExist) throw new HttpException("You already have a business page",HttpStatus.CONFLICT)
+    if (companyExist)
+      throw new HttpException(
+        'You already have a business page',
+        HttpStatus.CONFLICT,
+      );
     const password = await argon2.hash(companyCreateDto.password);
     const confirmPassword = await argon2.hash(companyCreateDto.confirmPassword);
     companyCreateDto.password = password;
@@ -130,6 +140,26 @@ export class AuthRepository {
     }
 
     if (!company) {
+      throw new BadRequestException('You did not have a page');
+    }
+  }
+
+  async loginCompanyAdmin(loginUserDto: LoginUserDto) {
+    const companyAdmin = await this.companyAdminModel.findOne({
+      email: loginUserDto.email,
+    });
+    if (companyAdmin) {
+      const passwordCheck = await argon2.verify(
+        companyAdmin.password,
+        loginUserDto.password,
+      );
+      if (!passwordCheck)
+        throw new HttpException('Invalid Credentials', HttpStatus.BAD_REQUEST);
+      else return companyAdmin;
+      
+    }
+
+    if (!companyAdmin) {
       throw new BadRequestException('You did not have a page');
     }
   }

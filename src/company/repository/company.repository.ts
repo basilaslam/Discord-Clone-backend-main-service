@@ -20,7 +20,7 @@ export class CompanyRepository {
     private companyAdminModel: Model<CompanyAdminDocument>,
   ) {}
 
-  async addAdmin(companyAdminDto: CompanyAdminDto): Promise<CompanyAdmin> {
+  async addAdmin(companyAdminDto: CompanyAdminDto): Promise<any> {
     const adminExist = await this.companyAdminModel.findOne({
       email: companyAdminDto.email,
     });
@@ -36,9 +36,11 @@ export class CompanyRepository {
       const randomNumber = Math.floor(Math.random() * chars.length);
       password += chars.substring(randomNumber, randomNumber + 1);
     }
+    const newPassword = await argon2.hash(password);
     companyAdminDto.status = true;
-    companyAdminDto.password = password;
+    companyAdminDto.password = newPassword;
     const newAdmin = new this.companyAdminModel(companyAdminDto).save();
+    (await newAdmin).password = password;
     return newAdmin;
   }
 

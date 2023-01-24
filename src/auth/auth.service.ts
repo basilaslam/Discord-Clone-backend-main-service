@@ -85,4 +85,15 @@ export class AuthService {
       };
     }
   }
+
+  async loginCompanyAdmin(loginUserDto: LoginUserDto): Promise<any> {
+    const result = await this.authRepository.loginCompanyAdmin(loginUserDto);
+    if (result) {
+      const accessToken = await this.createToken(result.email, result.password);
+      return {
+        result,
+        accessToken,
+      };
+    }
+  }
 }

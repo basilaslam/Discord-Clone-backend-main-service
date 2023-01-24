@@ -72,6 +72,14 @@ export class AuthController {
     return result;
   }
 
+  @Post('/company-admin/login')
+  async companyAdminLogin(
+    @Body() loginUserDto: LoginUserDto,
+  ): Promise<LoginUserDto> {
+    const result = await this.authService.loginCompanyAdmin(loginUserDto);
+    return result;
+  }
+
   async sendEmail(email: string, subject: string, text: string) {
     try {
       const transporter = nodemailer.createTransport({
