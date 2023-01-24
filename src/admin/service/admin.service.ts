@@ -13,4 +13,8 @@ export class AdminService {
   async approveCompany(companyId): Promise<boolean> {
     return this.adminRepository.approveCompany(companyId);
   }
+
+  async getCompanyDetails(companyId): Promise<Company> {
+    return this.adminRepository.getCompanyDetails(companyId);
+  }
 }

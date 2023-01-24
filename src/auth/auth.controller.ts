@@ -1,4 +1,5 @@
 import {
+  BadGatewayException,
   Body,
   Controller,
   HttpException,
@@ -11,6 +12,8 @@ import { CreateUserWithProvidersDto } from 'src/user/dto/createUserWithProviders
 import { LoginUserDto } from 'src/user/dto/loginUser.dto';
 import * as nodemailer from 'nodemailer';
 import { EmailDto } from './dto/email.dto';
+import { CompanyCreateDto } from 'src/company/dto/companyCreate.dto';
+import { Company } from 'src/company/schema/company.schema';
 
 @Controller('auth')
 export class AuthController {
@@ -38,6 +41,21 @@ export class AuthController {
       createUserWithProvidersDto,
     );
     return result;
+  }
+
+  @Post('/create')
+  async createABusinessPage(
+    @Body()
+    companyCreateDto: CompanyCreateDto,
+  ): Promise<Company> {
+    if (companyCreateDto.password != companyCreateDto.confirmPassword) {
+      throw new HttpException(
+        'password must be equal to confirm password',
+        HttpStatus.BAD_REQUEST,
+      );
+    } else {
+      return this.authService.createABusinessPage(companyCreateDto);
+    }
   }
 
   @Post('/user/login')
@@ -73,9 +91,7 @@ export class AuthController {
         subject,
         text,
       });
-      console.log('email sent successful');
     } catch (error) {
-      console.log('email not sent');
       console.log(error);
     }
   }

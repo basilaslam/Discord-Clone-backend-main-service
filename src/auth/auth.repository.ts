@@ -14,6 +14,7 @@ import { User, UserDocument } from 'src/user/schemas/user.schema';
 import { LoginUserDto } from 'src/user/dto/loginUser.dto';
 import { CreateUserWithProvidersDto } from 'src/user/dto/createUserWithProviders.dto';
 import { Company, CompanyDocument } from 'src/company/schema/company.schema';
+import { CompanyCreateDto } from 'src/company/dto/companyCreate.dto';
 
 @Injectable()
 export class AuthRepository {
@@ -76,6 +77,22 @@ export class AuthRepository {
     }
   }
 
+  async createABusinessPage(
+    companyCreateDto: CompanyCreateDto,
+  ): Promise<Company> {
+    const companyExist = await this.companyModel.findOne({
+      email: companyCreateDto.email,
+    });
+    if(companyExist) throw new HttpException("You already have a business page",HttpStatus.CONFLICT)
+    const password = await argon2.hash(companyCreateDto.password);
+    const confirmPassword = await argon2.hash(companyCreateDto.confirmPassword);
+    companyCreateDto.password = password;
+    companyCreateDto.confirmPassword = confirmPassword;
+    companyCreateDto.approved = false;
+    const company = await new this.companyModel(companyCreateDto);
+    return company.save();
+  }
+
   async loginUser(loginUserDto: LoginUserDto) {
     const user = await this.userModel.findOne({ email: loginUserDto.email });
     if (user) {
@@ -94,18 +111,25 @@ export class AuthRepository {
   }
 
   async loginCompany(loginUserDto: LoginUserDto) {
-    const user = await this.companyModel.findOne({ email: loginUserDto.email });
-    if (user) {
+    const company = await this.companyModel.findOne({
+      email: loginUserDto.email,
+    });
+    if (company) {
       const passwordCheck = await argon2.verify(
-        user.password,
+        company.password,
         loginUserDto.password,
       );
       if (!passwordCheck)
         throw new HttpException('Invalid Credentials', HttpStatus.BAD_REQUEST);
-      else return user;
+      if (company.approved) return company;
+      else
+        throw new HttpException(
+          'Your page is not approved yet Please wait until administrator approve your request',
+          HttpStatus.NOT_ACCEPTABLE,
+        );
     }
 
-    if (!user) {
+    if (!company) {
       throw new BadRequestException('You did not have a page');
     }
   }

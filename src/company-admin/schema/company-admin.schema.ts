@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { Schema as MongooseSchema } from 'mongoose';
+import { Schema as MongooseSchema , Types} from 'mongoose';
 
 export type CompanyAdminDocument = HydratedDocument<CompanyAdmin>;
 
@@ -9,6 +9,13 @@ export type CompanyAdminDocument = HydratedDocument<CompanyAdmin>;
   timestamps: true,
 })
 export class CompanyAdmin {
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'companies',
+    required: true,
+  })
+  company: Types.ObjectId;
+
   @Prop({ required: true })
   name: string;
 
@@ -31,13 +38,16 @@ export class CompanyAdmin {
   address: string;
 
   @Prop({})
-  postalCode:number;
+  postalCode: number;
 
-  @Prop({required: true})
+  @Prop({ required: true })
   authority: string;
 
-  @Prop({required:true})
+  @Prop({ required: true })
   status: true;
+
+  @Prop({ required: true })
+  password: string;
 }
 
 export const CompanyAdminSchema = SchemaFactory.createForClass(CompanyAdmin);

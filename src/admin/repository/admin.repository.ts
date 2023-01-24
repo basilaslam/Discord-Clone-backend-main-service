@@ -26,4 +26,8 @@ export class AdminRepository {
     );
     return true;
   }
+
+  async getCompanyDetails(companyId): Promise<Company> {
+    return this.companyModel.findOne({ _id: companyId });
+  }
 }

@@ -1,10 +1,6 @@
-/* eslint-disable prettier/prettier */
-import { CreateUserWithProvidersDto } from '../dto/createUserWithProviders.dto';
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from 'src/user/dto/createUser.dto';
 import { UserRepository } from 'src/user/repositories/user.repository';
 import { User } from 'src/user/schemas/user.schema';
-import { LoginUserDto } from 'src/user/dto/loginUser.dto';
 
 @Injectable()
 export class UserService {

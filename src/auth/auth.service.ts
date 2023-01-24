@@ -5,6 +5,8 @@ import { CreateUserDto } from 'src/user/dto/createUser.dto';
 import { AuthRepository } from './auth.repository';
 import { CreateUserWithProvidersDto } from 'src/user/dto/createUserWithProviders.dto';
 import { LoginUserDto } from 'src/user/dto/loginUser.dto';
+import { CompanyCreateDto } from 'src/company/dto/companyCreate.dto';
+import { Company } from 'src/company/schema/company.schema';
 
 @Injectable()
 export class AuthService {
@@ -32,7 +34,6 @@ export class AuthService {
 
   async createUser(createUserDto: CreateUserDto): Promise<any> {
     const result = await this.authRepository.create(createUserDto);
-    console.log(result);
     if (result) {
       const accessToken = await this.createToken(result.email, result.password);
       return {
@@ -55,6 +56,12 @@ export class AuthService {
         accessToken,
       };
     }
+  }
+
+  async createABusinessPage(
+    companyCreateDto: CompanyCreateDto,
+  ): Promise<Company> {
+    return this.authRepository.createABusinessPage(companyCreateDto);
   }
 
   async loginUser(loginUserDto: LoginUserDto): Promise<any> {

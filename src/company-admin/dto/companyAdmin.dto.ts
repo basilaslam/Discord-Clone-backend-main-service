@@ -4,11 +4,11 @@ import { IsNotEmpty, IsEmail, MinLength, MaxLength } from 'class-validator';
 export class CompanyAdminDto {
   @IsNotEmpty()
   name: string;
-  
+
   @IsNotEmpty()
   @IsEmail()
   email: string;
-  
+
   @IsNotEmpty()
   position: string;
 
@@ -17,7 +17,7 @@ export class CompanyAdminDto {
 
   address: string;
   mobile: number;
-  postalCode:number;
+  postalCode: number;
 
   @IsNotEmpty()
   @MaxLength(10)
@@ -28,4 +28,6 @@ export class CompanyAdminDto {
   authority: string;
 
   status: boolean;
+
+  password:string;
 }
