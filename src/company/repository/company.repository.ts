@@ -11,6 +11,10 @@ import {
   CompanyAdminDocument,
 } from 'src/company-admin/schema/company-admin.schema';
 import { CompanyAdminDto } from 'src/company-admin/dto/companyAdmin.dto';
+import {
+  JobPost,
+  JobPostDocument,
+} from 'src/company-admin/schema/job-post-schema.schema';
 
 @Injectable()
 export class CompanyRepository {
@@ -18,6 +22,8 @@ export class CompanyRepository {
     @InjectModel(Company.name) private companyModel: Model<CompanyDocument>,
     @InjectModel(CompanyAdmin.name)
     private companyAdminModel: Model<CompanyAdminDocument>,
+    @InjectModel(JobPost.name)
+    private jobPostModel: Model<JobPostDocument>,
   ) {}
 
   async addAdmin(companyAdminDto: CompanyAdminDto): Promise<any> {
@@ -46,5 +52,9 @@ export class CompanyRepository {
 
   async getAllCompanyAdmins(): Promise<CompanyAdmin[]> {
     return this.companyAdminModel.find({});
+  }
+
+  async getJobPosts(): Promise<JobPost[]> {
+    return this.jobPostModel.find({}).populate('companyId');
   }
 }

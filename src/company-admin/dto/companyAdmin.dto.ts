@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { IsNotEmpty, IsEmail, MinLength, MaxLength } from 'class-validator';
 
 export class CompanyAdminDto {
@@ -29,5 +28,5 @@ export class CompanyAdminDto {
 
   status: boolean;
 
-  password:string;
+  password: string;
 }

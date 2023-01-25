@@ -6,10 +6,12 @@ import {
   CompanyAdmin,
   CompanyAdminSchema,
 } from './schema/company-admin.schema';
+import { JobPost, JobPostSchema } from './schema/job-post-schema.schema';
 import { CompanyAdminService } from './service/company-admin.service';
 
 @Module({
   imports: [
+    MongooseModule.forFeature([{ name: JobPost.name, schema: JobPostSchema }]),
     MongooseModule.forFeature([
       { name: CompanyAdmin.name, schema: CompanyAdminSchema },
     ]),

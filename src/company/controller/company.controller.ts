@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { CompanyAdminDto } from 'src/company-admin/dto/companyAdmin.dto';
 import { CompanyAdmin } from 'src/company-admin/schema/company-admin.schema';
+import { JobPost } from 'src/company-admin/schema/job-post-schema.schema';
 import { CompanyService } from '../service/company.service';
 
 @Controller('company')
@@ -18,5 +19,10 @@ export class CompanyController {
   @Get('/getAllCompanyAdmins')
   async getAllCompanyAdmins(): Promise<CompanyAdmin[]> {
     return this.companyService.getAllCompanyAdmins();
+  }
+
+  @Get('/getJobPosts')
+  async getJobPosts(): Promise<JobPost[]> {
+    return this.companyService.getJobPosts();
   }
 }

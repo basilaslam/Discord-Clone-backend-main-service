@@ -1,3 +1,7 @@
+import {
+  JobPost,
+  JobPostSchema,
+} from './../company-admin/schema/job-post-schema.schema';
 import { CompanyRepository } from './repository/company.repository';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -15,6 +19,7 @@ import {
     MongooseModule.forFeature([
       { name: CompanyAdmin.name, schema: CompanyAdminSchema },
     ]),
+    MongooseModule.forFeature([{ name: JobPost.name, schema: JobPostSchema }]),
   ],
   controllers: [CompanyController],
   providers: [CompanyService, CompanyRepository],
