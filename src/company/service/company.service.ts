@@ -12,8 +12,8 @@ export class CompanyService {
     return this.companyRepository.addAdmin(companyAdminDto);
   }
 
-  async getAllCompanyAdmins(): Promise<CompanyAdmin[]> {
-    return this.companyRepository.getAllCompanyAdmins();
+  async getAllCompanyAdmins(companyId: string): Promise<CompanyAdmin[]> {
+    return this.companyRepository.getAllCompanyAdmins(companyId);
   }
 
   async getJobPosts(): Promise<JobPost[]> {

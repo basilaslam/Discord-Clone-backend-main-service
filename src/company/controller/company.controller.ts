@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { CompanyAdminDto } from 'src/company-admin/dto/companyAdmin.dto';
 import { CompanyAdmin } from 'src/company-admin/schema/company-admin.schema';
 import { JobPost } from 'src/company-admin/schema/job-post-schema.schema';
@@ -17,8 +17,10 @@ export class CompanyController {
   }
 
   @Get('/getAllCompanyAdmins')
-  async getAllCompanyAdmins(): Promise<CompanyAdmin[]> {
-    return this.companyService.getAllCompanyAdmins();
+  async getAllCompanyAdmins(
+    @Query() object: { companyId: string },
+  ): Promise<CompanyAdmin[]> {
+    return this.companyService.getAllCompanyAdmins(object.companyId);
   }
 
   @Get('/getJobPosts')

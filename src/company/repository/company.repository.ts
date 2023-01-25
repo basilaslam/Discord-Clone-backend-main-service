@@ -50,11 +50,14 @@ export class CompanyRepository {
     return newAdmin;
   }
 
-  async getAllCompanyAdmins(): Promise<CompanyAdmin[]> {
-    return this.companyAdminModel.find({});
+  async getAllCompanyAdmins(companyId: string): Promise<CompanyAdmin[]> {
+    return this.companyAdminModel.find({ company: companyId });
   }
 
   async getJobPosts(): Promise<JobPost[]> {
-    return this.jobPostModel.find({}).populate('companyId');
+    return this.jobPostModel
+      .find({})
+      .populate('companyId')
+      .sort({ createdAt: -1 });
   }
 }
