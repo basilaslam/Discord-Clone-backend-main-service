@@ -1,3 +1,7 @@
+import {
+  JobPost,
+  JobPostSchema,
+} from './../company-admin/schema/job-post-schema.schema';
 import { User, UserSchema } from './schemas/user.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Module } from '@nestjs/common';
@@ -8,7 +12,10 @@ import { JwtModule } from '@nestjs/jwt/dist';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: User.name, schema: UserSchema },
+      { name: JobPost.name, schema: JobPostSchema },
+    ]),
     JwtModule.register({
       secret: 'secret',
       signOptions: {

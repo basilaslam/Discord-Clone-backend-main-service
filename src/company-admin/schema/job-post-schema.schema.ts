@@ -43,6 +43,12 @@ export class JobPost {
 
   @Prop({})
   image: string;
+
+  @Prop({
+    ref: 'User',
+    required: true,
+  })
+  applicants: Array<Types.ObjectId>;
 }
 
 export const JobPostSchema = SchemaFactory.createForClass(JobPost);

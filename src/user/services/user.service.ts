@@ -21,4 +21,8 @@ export class UserService {
   async getUserByEmail(email: string) {
     return this.userRepository.getUserByEmail(email);
   }
+
+  async applyForJob(jobId: string, userId: string): Promise<boolean> {
+    return this.userRepository.applyForJob(jobId, userId);
+  }
 }

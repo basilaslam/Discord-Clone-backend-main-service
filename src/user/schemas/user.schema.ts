@@ -25,6 +25,9 @@ export class User {
   @Prop({ default: '' })
   image: string;
 
+  @Prop({ default: '' })
+  resume: string;
+
   @Prop({ required: true })
   password: string;
 
