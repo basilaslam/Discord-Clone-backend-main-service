@@ -28,4 +28,12 @@ export class CompanyAdminService {
   async getAJobPost(jobId: string, user: boolean): Promise<JobPost[]> {
     return this.companyAdminRepository.getAJobPost(jobId, user);
   }
+
+  async rejectApplicant(applicantId: string, jobId: string): Promise<boolean> {
+    return this.companyAdminRepository.rejectApplicant(applicantId, jobId);
+  }
+
+  async acceptApplicant(applicantId: string, jobId: string): Promise<boolean> {
+    return this.companyAdminRepository.acceptApplicant(applicantId, jobId);
+  }
 }

@@ -81,7 +81,7 @@ export class UserRepository {
     // To check the user is already applied or not
     const alreadyApplied = await this.jobModel.findOne({
       _id: jobId,
-      applicants: { $in: [userId] },
+      'applicants.user': { $in: [new Types.ObjectId(userId)] },
     });
     if (alreadyApplied)
       throw new HttpException(
@@ -91,7 +91,11 @@ export class UserRepository {
     // To add the user as an applicant
     await this.jobModel.updateOne(
       { _id: jobId },
-      { $push: { applicants: new Types.ObjectId(userId) } },
+      {
+        $push: {
+          applicants: { user: new Types.ObjectId(userId), accepted: null },
+        },
+      },
     );
     return true;
   }

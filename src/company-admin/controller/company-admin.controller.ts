@@ -55,4 +55,28 @@ export class CompanyAdminController {
       throw new HttpException('An Error occurred', HttpStatus.BAD_REQUEST);
     return this.companyAdminService.getAJobPost(object.jobId, user);
   }
+
+  @Get('/rejectApplicant')
+  async rejectApplicant(
+    @Query() object: { applicantId: string; jobId: string },
+  ): Promise<boolean> {
+    if (!object.applicantId)
+      throw new HttpException('An Error occurred', HttpStatus.BAD_REQUEST);
+    return this.companyAdminService.rejectApplicant(
+      object.applicantId,
+      object.jobId,
+    );
+  }
+
+  @Get('/acceptApplicant')
+  async acceptApplicant(
+    @Query() object: { applicantId: string; jobId: string },
+  ): Promise<boolean> {
+    if (!object.applicantId)
+      throw new HttpException('An Error occurred', HttpStatus.BAD_REQUEST);
+    return this.companyAdminService.acceptApplicant(
+      object.applicantId,
+      object.jobId,
+    );
+  }
 }

@@ -81,17 +81,44 @@ export class CompanyAdminRepository {
       {
         $lookup: {
           from: 'users',
-          localField: 'applicants',
+          localField: 'applicants.user',
           foreignField: '_id',
           as: 'user',
         },
       },
       {
         $project: {
+          accepted: '$applicants.accepted',
           applicants: { $arrayElemAt: ['$user', 0] },
         },
       },
     ]);
     return users;
+  }
+
+  async rejectApplicant(applicantId: string, jobId: string): Promise<boolean> {
+    console.log(applicantId, jobId);
+    await this.jobPostModel.updateOne(
+      { _id: jobId, 'applicants.user': new Types.ObjectId(applicantId) },
+      {
+        $set: {
+          'applicants.$.accepted': false,
+        },
+      },
+    );
+    return true;
+  }
+
+  async acceptApplicant(applicantId: string, jobId: string): Promise<boolean> {
+    console.log(applicantId, jobId);
+    await this.jobPostModel.updateOne(
+      { _id: jobId, 'applicants.user': new Types.ObjectId(applicantId) },
+      {
+        $set: {
+          'applicants.$.accepted': true,
+        },
+      },
+    );
+    return true;
   }
 }
