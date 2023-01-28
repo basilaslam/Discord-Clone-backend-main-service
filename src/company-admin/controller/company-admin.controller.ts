@@ -79,4 +79,19 @@ export class CompanyAdminController {
       object.jobId,
     );
   }
+
+  @Post('/acceptApplicant')
+  async acceptApplicantAndSchedule(
+    @Body() formData: any,
+    @Query() object: { jobId: string; applicantId: string; adminId: string },
+  ): Promise<boolean> {
+    if (!object.applicantId || !object.jobId || !object.adminId)
+      throw new HttpException('An Error occurred', HttpStatus.BAD_REQUEST);
+    return this.companyAdminService.acceptApplicantAndSchedule(
+      formData,
+      object.applicantId,
+      object.jobId,
+      object.adminId,
+    );
+  }
 }

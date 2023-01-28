@@ -36,4 +36,18 @@ export class CompanyAdminService {
   async acceptApplicant(applicantId: string, jobId: string): Promise<boolean> {
     return this.companyAdminRepository.acceptApplicant(applicantId, jobId);
   }
+
+  async acceptApplicantAndSchedule(
+    formData: any,
+    applicantId: string,
+    jobId: string,
+    adminId: string,
+  ): Promise<boolean> {
+    return this.companyAdminRepository.acceptApplicantAndSchedule(
+      formData,
+      applicantId,
+      jobId,
+      adminId,
+    );
+  }
 }

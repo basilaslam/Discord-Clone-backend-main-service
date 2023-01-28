@@ -121,4 +121,78 @@ export class CompanyAdminRepository {
     );
     return true;
   }
+
+  async acceptApplicantAndSchedule(
+    formData: any,
+    applicantId: string,
+    jobId: string,
+    adminId: string,
+  ): Promise<boolean> {
+    const adminAuthority = await this.companyAdminModel.findOne({
+      _id: adminId,
+    });
+
+    // Update the jobPost by applicant information if it is a online interview
+    if (formData.onlineInterviewDate) {
+      const { onlineInterviewDate, onlineInterviewTime } = formData;
+      await this.jobPostModel.updateOne(
+        { _id: jobId, 'applicants.user': new Types.ObjectId(applicantId) },
+        {
+          $set: {
+            'applicants.$.accepted': true,
+            'applicants.$.online': {
+              date: onlineInterviewDate,
+              time: onlineInterviewTime,
+              completed: false,
+              approved: false,
+              scheduledAdmin: new Types.ObjectId(adminId),
+            },
+          },
+        },
+      );
+    }
+
+    // Update the jobPost by applicant information if it is a offline interview
+    if (formData.offlineInterviewDate) {
+      const {
+        offlineInterviewDate,
+        offlineInterviewTime,
+        offlineInterviewPlace,
+      } = formData;
+      await this.jobPostModel.updateOne(
+        { _id: jobId, 'applicants.user': new Types.ObjectId(applicantId) },
+        {
+          $set: {
+            'applicants.$.accepted': true,
+            'applicants.$.offline': {
+              date: offlineInterviewDate,
+              time: offlineInterviewTime,
+              place: offlineInterviewPlace,
+              completed: false,
+              approved: false,
+              scheduledAdmin: new Types.ObjectId(adminId),
+            },
+          },
+        },
+      );
+    }
+
+    // Update the jobPost by applicant information if admin directly hire the user
+    if (formData.directHire) {
+      await this.jobPostModel.updateOne(
+        { _id: jobId, 'applicants.user': new Types.ObjectId(applicantId) },
+        {
+          $set: {
+            'applicants.$.accepted': true,
+            'applicants.$.hired': {
+              hire: true,
+              approved: false,
+              hiredAdmin: new Types.ObjectId(adminId),
+            },
+          },
+        },
+      );
+    }
+    return true;
+  }
 }
