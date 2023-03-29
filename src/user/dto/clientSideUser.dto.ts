@@ -1,8 +1,6 @@
 /* eslint-disable prettier/prettier */
 export class UserToClient {
-  firstName: string;
-
-  lastName: string;
+  username : string;
 
   email: string;
 

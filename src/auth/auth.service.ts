@@ -3,27 +3,28 @@ import { JwtService } from '@nestjs/jwt';
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from 'src/user/dto/createUser.dto';
 import { AuthRepository } from './auth.repository';
-import { CreateUserWithProvidersDto } from 'src/user/dto/createUserWithProviders.dto';
+import * as jwt from 'jsonwebtoken';
 import { LoginUserDto } from 'src/user/dto/loginUser.dto';
-import { CompanyCreateDto } from 'src/company/dto/companyCreate.dto';
-import { Company } from 'src/company/schema/company.schema';
+import { alterUserData } from 'src/special-functions/alterUserdata';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private jwt: JwtService,
+    private nestJwt: JwtService,
     private config: ConfigService,
     private authRepository: AuthRepository,
   ) {}
 
   // To create a JWT
-  async createToken(email: string, password: string) {
+  async createToken(email: string, id: string, password: string) {
+    console.log('stage - 4 ');
     const payLoad = {
       email,
       password,
+      id,
     };
-    const secret = this.config.get('secret');
-    const token = await this.jwt.signAsync(payLoad, {
+    const secret = this.config.get('JWT_SECRET');
+    const token = await this.nestJwt.signAsync(payLoad, {
       expiresIn: '1h',
       secret: secret,
     });
@@ -32,42 +33,48 @@ export class AuthService {
     };
   }
 
+  async validateToken(auth: string) {
+    if (auth.split(' ')[0] !== 'Bearer') {
+      throw new Error('Invalid token');
+    }
+    const token = auth.split(' ')[1];
+    try {
+      const decoded = jwt.verify(token, 'secretKey');
+      return decoded;
+    } catch (err) {
+      throw new Error('Invalid token');
+    }
+  }
+
   async createUser(createUserDto: CreateUserDto): Promise<any> {
+    console.log(createUserDto);
+
     const result = await this.authRepository.create(createUserDto);
+    delete result.password;
     if (result) {
-      const accessToken = await this.createToken(result.email, result.password);
+      const accessToken = await this.createToken(
+        result.email,
+        result._id,
+        result.password,
+      );
       return {
         result,
         accessToken,
       };
     }
-  }
-
-  async registerWithProviders(
-    createUserWithProvidersDto: CreateUserWithProvidersDto,
-  ): Promise<any> {
-    const result = await this.authRepository.registerWithProviders(
-      createUserWithProvidersDto,
-    );
-    if (result) {
-      const accessToken = await this.createToken(result.email, result.password);
-      return {
-        result,
-        accessToken,
-      };
-    }
-  }
-
-  async createABusinessPage(
-    companyCreateDto: CompanyCreateDto,
-  ): Promise<Company> {
-    return this.authRepository.createABusinessPage(companyCreateDto);
   }
 
   async loginUser(loginUserDto: LoginUserDto): Promise<any> {
     const result = await this.authRepository.loginUser(loginUserDto);
+    console.log(result);
+
     if (result) {
-      const accessToken = await this.createToken(result.email, result.password);
+      delete result.password;
+      const accessToken = await this.createToken(
+        result.email,
+        result._id.toString(),
+        result.password,
+      );
       return {
         result,
         accessToken,
@@ -75,25 +82,8 @@ export class AuthService {
     }
   }
 
-  async loginCompany(loginUserDto: LoginUserDto): Promise<any> {
-    const result = await this.authRepository.loginCompany(loginUserDto);
-    if (result) {
-      const accessToken = await this.createToken(result.email, result.password);
-      return {
-        result,
-        accessToken,
-      };
-    }
-  }
-
-  async loginCompanyAdmin(loginUserDto: LoginUserDto): Promise<any> {
-    const result = await this.authRepository.loginCompanyAdmin(loginUserDto);
-    if (result) {
-      const accessToken = await this.createToken(result.email, result.password);
-      return {
-        result,
-        accessToken,
-      };
-    }
+  extractToken(token: string) {
+    const detailes = this.nestJwt.decode(token);
+    console.log(detailes);
   }
 }

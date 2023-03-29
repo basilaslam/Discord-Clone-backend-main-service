@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+  api:
+    # image: thomas-oliver/nestjs-dockerized 
+    build:
+      dockerfile: Dockerfile
+      context: .
+      # Only will build development stage from our dockerfile
+      target: development
+    # Mount our host Directory to the docker container
+    # Mount (.) current directory to the docker container thomas/src/app
+    # reflect file changes from host to container
+    volumes:
+      - .:/app
+      - ./app/node_modules
+    # Run in Debug Mode: npm run start:debug --> Don't forget to start your vscode debugger!
+    # Run in dev Mode: npm run start:dev
+    command: npm run start:dev
+    depends_on: 
+      - mongo
+    environment: 
+      # MONGO_LOCAL_CONNECTION_URL: mongodb://mongo:27017/db
+      NODE_ENV: development
+      APP_PORT: 4000
+      APP_GLOBAL_PREFIX: tickets
+      JWT_SECRET: abcdABCD1234554321
+      JWT_EXP_H: 3600s
+      JWT_EXP_D: 1d
+      MONGO_LOCAL_CONNECTION_URL : mongodb+srv://basil:basilaslam@cluster0.ehiyair.mongodb.net/?retryWrites:true&w:majority/discord
+      AWS_BUCKET_NAME : discord-files
+      AWS_REGION : ap-south-1
+      AWS_ACCESS_KEY_ID : AKIA6M25AZAMNGYTK66N
+      AWS_SECRET_ACCESS_KEY : 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
+    ports:
+      - 8080:4000
+      # debugging port
+      - 9229:9229
+
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
