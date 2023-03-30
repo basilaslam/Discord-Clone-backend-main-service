@@ -19,7 +19,7 @@ import { MessagesModule } from './messages/messages.module';
     ChannelModule,
     ServerModule,
     MessagesModule,
-    S3Module,
+    // S3Module,
   ],
   // providers: [ChannelService, ServerService],
 })

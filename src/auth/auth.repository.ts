@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import * as argon2 from 'argon2';
+import * as bcrypt from 'bcryptjs';
 import { User, UserDocument } from 'src/user/schemas/user.schema';
 import { LoginUserDto } from 'src/user/dto/loginUser.dto';
 
@@ -33,7 +33,8 @@ export class AuthRepository {
     let newUser;
     let userCreated;
     try {
-      const password = await argon2.hash(createUserDto.password);
+      const saltRounds = 10;
+      const password = await bcrypt.hash(createUserDto.password, saltRounds);
       createUserDto.password = password;
 
       newUser = await new this.userModel(createUserDto);
@@ -48,10 +49,8 @@ export class AuthRepository {
   async loginUser(loginUserDto: LoginUserDto) {
     const user = await this.userModel.findOne({ email: loginUserDto.email });
     if (user) {
-      const passwordCheck = await argon2.verify(
-        user.password,
-        loginUserDto.password,
-      );
+      const passwordCheck = await bcrypt.compare(loginUserDto.password, user.password);
+
       if (!passwordCheck)
         throw new HttpException('Invalid Credentials', HttpStatus.BAD_REQUEST);
       else return user;

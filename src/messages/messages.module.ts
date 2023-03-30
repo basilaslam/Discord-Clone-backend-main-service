@@ -9,7 +9,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         name: 'MESSAGE_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: ['amqp://guest:guest@localhost:5672/hello'],
+          urls: ['amqp://rabbitmq:5672/discord'],
           queue: 'message_queue',
           queueOptions: {
             durable: false,
