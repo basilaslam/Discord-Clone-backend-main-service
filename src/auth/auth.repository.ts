@@ -40,6 +40,8 @@ export class AuthRepository {
       newUser = await new this.userModel(createUserDto);
       userCreated = await newUser.save();
     } catch (error) {
+      console.log(error);
+      
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     delete userCreated.password;

@@ -44,7 +44,6 @@ export class MessagesController {
   @Post('/addMessage')
   async addMessage(@Body() body) {
     console.log('test-1');
-
     const res = await this.client.send('add-message', body).toPromise();
     return res;
   }

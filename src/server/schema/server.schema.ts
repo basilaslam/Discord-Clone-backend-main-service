@@ -13,14 +13,14 @@ export class Server {
   @Prop({ required: true })
   servername: string;
   
-  @Prop({type:MongooseSchema.Types.ObjectId, ref: 'channel',required:false})
+  @Prop({type:MongooseSchema.Types.ObjectId, ref: 'Channel',required:false})
   channels: Array<MongooseSchema.Types.ObjectId>;
 
-  @Prop({type:MongooseSchema.Types.ObjectId, ref: 'users',required:false})
+  @Prop({type:MongooseSchema.Types.ObjectId, ref: 'User',required:false})
     adminstrators: Array<MongooseSchema.Types.ObjectId>;
   @Prop()
   logo: string;
-  @Prop({required:false, type: MongooseSchema.Types.ObjectId, ref: 'users'})
+  @Prop({required:false, ref: 'User'})
   members:Array<MongooseSchema.Types.ObjectId>
 
   @Prop({required:false, type: MongooseSchema.Types.ObjectId,ref: 'users'})

@@ -25,7 +25,9 @@ export class ServerService {
     return user.servers;
   }
   async listMembers(id: string) {
-    const server = await this.ServerModel.findOne({ _id: id });
+    const server = await this.ServerModel.findOne({ _id: id }).populate(
+      'members',
+    );
     console.log(server);
     return server;
   }

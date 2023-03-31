@@ -16,7 +16,7 @@ export class User {
   @Prop({ required: true })
   email: string;
 
-  @Prop({ default: '' })
+  @Prop({required: true})
   image: string;
 
   @Prop({ required: true })
@@ -28,8 +28,8 @@ export class User {
   @Prop()
   verified: boolean;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Server' })
-  servers:  Array<string>;
+  @Prop({ ref: 'Server' })
+  servers:  Array<MongooseSchema.Types.ObjectId>;
 
 }
 
