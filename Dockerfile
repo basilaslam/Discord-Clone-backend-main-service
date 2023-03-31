@@ -1,20 +1,32 @@
-# Base image
-FROM node:18-alpine
+FROM node:alpine AS development
 
-# Create app directory
 WORKDIR /app
 
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
 COPY package*.json ./
 
-# Install app dependencies
+RUN npm install -g npm@latest
+
 RUN npm install
 
-# Bundle app source
-COPY . .
+COPY . . 
 
 RUN npm run build
 
-EXPOSE 4000
-# Start the server using the production build
-CMD ["npm", "run", "start:prod" ]
+FROM node:alpine as production
+
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm install -g npm@latest
+
+RUN npm install --only=prod
+
+COPY . .
+
+COPY --from=development /app/dist ./dist
+
+CMD ["node", "dist/main"]
